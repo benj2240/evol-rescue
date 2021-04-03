@@ -1,6 +1,23 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bird Evolution</title>
+<style>
+    #log {
+        max-height: 24em;
+        overflow-y: scroll;
+    }
+</style>
+</head>
+<body>
+    <div id="log"></div>
+    <!-- Enclosing the input in a form allows easy capturing of the enter key -->
+    <form id="console">
+        <input type="text" id="input" />
+        <input type="submit" value="enter" />
+    </form>
+<script type="text/python">
 import random
 
 #environment colors
@@ -277,6 +294,6 @@ print_totals()
 score = (sum(wild_dict.values()) + sum(zoo_dict.values())) - 30
 print("You were able to increase your bird population by " + str(score) + " birds.")
 
-
-
-
+</script>
+</body>
+</html>
