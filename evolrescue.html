@@ -353,7 +353,7 @@ while (round_no < rounds) {
         await input("Press enter to migrate." + "\n")
         choice_migrate = await input("\n" + "Do you want to add more birds from the zoo? ")
         if ((choice_migrate == "y" || choice_migrate == "yes")) {
-            migrate(wild_dict, zoo_dict)
+            await migrate(wild_dict, zoo_dict)
             print_totals()
             print("\n" + "---" + "END OF ROUND " + str(round_no)+ "\n")            
         }
