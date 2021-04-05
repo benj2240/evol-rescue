@@ -111,13 +111,13 @@ function print_totals() {
     print("Yellow: " + str(wild_dict["yellow"]))
     print("Green: " + str(wild_dict["green"]))
     print("Blue: " + str(wild_dict["blue"]))
-    print("Purple: " + str(wild_dict["purple"]) + "\n")
+    print("Purple: " + str(wild_dict["purple"]))
     total_zoo = sum(Object.values(zoo_dict))
     total_wild = sum(Object.values(wild_dict))
     total = total_zoo + total_wild
     print("Zoo: " + str(total_zoo))
     print("Wild: " + str(total_wild))
-    print("Overall total: " +str(total) + "\n")
+    print("Overall total: " +str(total))
 }
 
 function color_match(current_env) {
@@ -146,10 +146,10 @@ function color_match(current_env) {
 function predation(wild_dict, opp_color) {
     animal = ["hawk", "snake", "badger", "fox"]
     predator = random.choice(animal)
-    print("\n" + "A " + str(predator) + " attacks!")
+    print("A " + str(predator) + " attacks!")
     if (wild_dict[opp_color]) {
         wild_dict[opp_color] = 0
-        print("\n" + "Your " + str(opp_color) + " birds were very visible in the " + str(current_env) + " habitat and were all eaten.")
+        print("Your " + str(opp_color) + " birds were very visible in the " + str(current_env) + " habitat and were all eaten.")
     }
     return(wild_dict)    
 }
@@ -157,12 +157,12 @@ function predation(wild_dict, opp_color) {
 function reproduce(current_env, wild_dict, adj_color) {
     if (wild_dict[current_env]) {
         wild_dict[current_env] += 3
-        print("You get +3 for your " + str(current_env) + " birds because they camouflage perfectly."+ "\n")
+        print("You get +3 for your " + str(current_env) + " birds because they camouflage perfectly.")
     }
     for (let i of adj_color) {
         if (wild_dict[i]) {
             wild_dict[i] += 1
-            print("You get +1 for your " + str(adj_color) + " birds because they blend in pretty well." + "\n")
+            print("You get +1 for your " + str(adj_color) + " birds because they blend in pretty well.")
         }
     }
     return wild_dict
@@ -179,7 +179,7 @@ function mutation(wild_dict) {
     wild_dict[loser] -= 1
     winner = random.choice(winner_choice)
     wild_dict[winner] += 1
-    print("\n" + "One " + str(loser) + " bird mutated into a " + str(winner) + " bird." + "\n")
+    print("One " + str(loser) + " bird mutated into a " + str(winner) + " bird.")
     return wild_dict
 }
 
@@ -229,15 +229,15 @@ function drift(wild_dict) {
         }
     }
     else
-        print("\n" + "All your birds are safe!")    
+        print("All your birds are safe!")    
     total_wild = sum(Object.values(wild_dict))
-    print ("\n" + "You still have " + str(total_wild) + " wild birds" + "\n")    
+    print ("You still have " + str(total_wild) + " wild birds")    
     return wild_dict
 }
 
 async function migrate(wild_dict, zoo_dict) {
     if (zoo_dict["ZR"] > 0) {
-        print("\n" + "Red in zoo: " + str(zoo_dict["ZR"]))
+        print("Red in zoo: " + str(zoo_dict["ZR"]))
         nR = int(await input("Migrate how many red? "))
         while ((nZR - nR) < 0)
             nR = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZR) + ": "))
@@ -245,7 +245,7 @@ async function migrate(wild_dict, zoo_dict) {
         zoo_dict["ZR"] = zoo_dict["ZR"] - nR
     }
     if (zoo_dict["ZO"] > 0) {
-        print("\n" + "Orange in zoo: " + str(zoo_dict["ZO"]))
+        print("Orange in zoo: " + str(zoo_dict["ZO"]))
         nO = int(await input("Migrate how many orange? "))
         while ((nZO - nO) < 0)
             nO = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
@@ -253,7 +253,7 @@ async function migrate(wild_dict, zoo_dict) {
         zoo_dict["ZO"] = zoo_dict["ZO"] - nO
     }
     if (zoo_dict["ZY"] > 0) {
-        print("\n" + "Yellow in zoo: " + str(zoo_dict["ZY"]))
+        print("Yellow in zoo: " + str(zoo_dict["ZY"]))
         nY = int(await input("Migrate how many yellow? "))
         while ((nZY - nY) < 0)
             nY = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZY) + ": "))
@@ -261,7 +261,7 @@ async function migrate(wild_dict, zoo_dict) {
         zoo_dict["ZY"] = zoo_dict["ZY"] - nY
     }
     if (zoo_dict["ZG"] > 0) {
-        print("\n" + "Green in zoo: " + str(zoo_dict["ZG"]))
+        print("Green in zoo: " + str(zoo_dict["ZG"]))
         nG = int(await input("Migrate how many green? "))
         while ((nZG - nG) < 0)
             nG = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZG) + ": "))
@@ -269,7 +269,7 @@ async function migrate(wild_dict, zoo_dict) {
         zoo_dict["ZG"] = zoo_dict["ZG"] - nG
     }
     if (zoo_dict["ZB"] > 0) {
-        print("\n" + "Blue in zoo: " + str(zoo_dict["ZB"]))
+        print("Blue in zoo: " + str(zoo_dict["ZB"]))
         nB = int(await input("Migrate how many blue? "))
         while ((nZB - nB) < 0)
             nB = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZB) + ": "))
@@ -277,7 +277,7 @@ async function migrate(wild_dict, zoo_dict) {
         zoo_dict["ZB"] = zoo_dict["ZB"] - nB
     }
     if (zoo_dict["ZP"] > 0) {
-        print("\n" + "Purple in zoo: " + str(zoo_dict["ZP"]))
+        print("Purple in zoo: " + str(zoo_dict["ZP"]))
         nP = int(await input("Migrate how many purple? "))
         while ((nZP - nP) < 0)
             nP = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZP) + ": "))
@@ -291,86 +291,86 @@ async function migrate(wild_dict, zoo_dict) {
 
 async function play () {
 round_no = 1
-print("ROUND " + str(round_no) + "\n")
+print("ROUND " + str(round_no))
 current_env = random.choice(env)
-print("Current environment is: " + str(current_env) + "\n" )
-print("Each zoo has 5 birds. You can take birds from the zoo and introduce them into the wild." + "\n")
-nR = int(await input("How many red birds would you like to add from the zoo? " + "\n"))
+print("Current environment is: " + str(current_env) )
+print("Each zoo has 5 birds. You can take birds from the zoo and introduce them into the wild.")
+nR = int(await input("How many red birds would you like to add from the zoo? "))
 while ((nZR - nR) < 0)
     nR = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZR) + ": "))
 wild_dict["red"] = nR
 zoo_dict["ZR"] = nZR - nR
     
-nO = int(await input("How many orange birds would you like to add from the zoo? " + "\n"))
+nO = int(await input("How many orange birds would you like to add from the zoo? "))
 while ((nZO - nO) < 0)
     nO = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
 wild_dict["orange"] = nO
 zoo_dict["ZO"] = nZO - nO
 
-nY = int(await input("How many yellow birds would you like to add from the zoo? " + "\n"))
+nY = int(await input("How many yellow birds would you like to add from the zoo? "))
 while ((nZY - nY) < 0)
     nY = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZY) + ": "))
 wild_dict["yellow"] = nY
 zoo_dict["ZY"] = nZY - nY
     
-nG = int(await input("How many green birds would you like to add from the zoo? " + "\n"))
+nG = int(await input("How many green birds would you like to add from the zoo? "))
 while ((nZG - nG) < 0)
     nG = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZG) + ": "))
 wild_dict["green"] = nG
 zoo_dict["ZG"] = nZG - nG
 
-nB = int(await input("How many blue birds would you like to add from the zoo? " + "\n"))
+nB = int(await input("How many blue birds would you like to add from the zoo? "))
 while ((nZB - nB) < 0)
     nB = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZB) + ": "))
 wild_dict["blue"] = nB
 zoo_dict["ZB"] = nZB - nB
 
-nP = int(await input("How many purple birds would you like to add from the zoo? " + "\n"))
+nP = int(await input("How many purple birds would you like to add from the zoo? "))
 while ((nZP - nP) < 0)
     nP = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZP) + ": "))
 wild_dict["purple"] = nP
 zoo_dict["ZP"] = nZP - nP
 
 while (round_no < rounds) {
-    print("\n" + "---")
+    print("---")
     color_match(current_env)
-    await input("Press enter to encounter predators." + "\n")
+    await input("Press enter to encounter predators.")
     predation(wild_dict, opp_color)
-    print("\n" + "---")
-    await input("Press enter to reproduce." + "\n")
+    print("---")
+    await input("Press enter to reproduce.")
     reproduce(current_env, wild_dict, adj_color)
     print_totals()
-    print("\n" + "---")
-    await input("Press enter to mutate." + "\n")
+    print("---")
+    await input("Press enter to mutate.")
     mutation(wild_dict)
     print_totals()
-    print("\n" + "---")
-    await input("Press enter to see the effects of drift (chance)." + "\n")
+    print("---")
+    await input("Press enter to see the effects of drift (chance).")
     drift(wild_dict)
     print_totals()
-    print("\n" + "---")
+    print("---")
     if (round_no < (rounds - 1)) {
-        await input("Press enter to migrate." + "\n")
-        choice_migrate = await input("\n" + "Do you want to add more birds from the zoo? ")
+        await input("Press enter to migrate.")
+        choice_migrate = await input("Do you want to add more birds from the zoo? ")
         if ((choice_migrate == "y" || choice_migrate == "yes")) {
             await migrate(wild_dict, zoo_dict)
             print_totals()
-            print("\n" + "---" + "END OF ROUND " + str(round_no)+ "\n")            
+            print("---" + "END OF ROUND " + str(round_no))            
         }
         else {
             print_totals()
-            print("\n" + "---" + "END OF ROUND " + str(round_no) + "\n")
+            print("---" + "END OF ROUND " + str(round_no))
         }
-        await input("Press enter for next round." + "\n")            
-        print("\n" + "---" + "\n" + "ROUND" + str(round_no + 1) + "\n")
+        await input("Press enter for next round.")            
+        print("---" + "ROUND" + str(round_no + 1))
         current_env = random.choice(env)
-        print("\n" + "Current environment is: " + str(current_env))
+        print("Current environment is: " + str(current_env))
         round_no += 1
     }
     else
         round_no += 1
 }
-print("\n" + "The End!")  
+print("The End!")  
 print_totals()
 score = (sum(Object.values(wild_dict)) + sum(Object.values(zoo_dict))) - 30
 print("You were able to increase your bird population by " + str(score) + " birds.")
