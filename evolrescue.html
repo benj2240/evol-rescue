@@ -208,7 +208,7 @@ function drift(wild_dict) {
         }
     }
     else if (loss == "C") {
-        total = Math.round((sum(Object.values(wild_dict)/2)))
+        total = Math.round((sum(Object.values(wild_dict))/2))
         print("A fire destroys nesting locations. Half your birds die.")
         while (t < total) {
             loser_choice = []
