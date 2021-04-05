@@ -240,7 +240,7 @@ async function migrate(wild_dict, zoo_dict) {
     if (zoo_dict["ZO"] > 0) {
         print("\n" + "Orange in zoo: " + str(zoo_dict["ZO"]))
         nO = int(await input("Migrate how many orange? "))
-        while ((nZO - nO) <= 0)
+        while ((nZO - nO) < 0)
             nO = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
         wild_dict["orange"] += nO
         zoo_dict["ZO"] = zoo_dict["ZO"] - nO
@@ -248,7 +248,7 @@ async function migrate(wild_dict, zoo_dict) {
     if (zoo_dict["ZY"] > 0) {
         print("\n" + "Yellow in zoo: " + str(zoo_dict["ZY"]))
         nY = int(await input("Migrate how many yellow? "))
-        while ((nZY - nY) <= 0)
+        while ((nZY - nY) < 0)
             nY = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZY) + ": "))
         wild_dict["yellow"] += nY
         zoo_dict["ZY"] = zoo_dict["ZY"] - nY
@@ -256,7 +256,7 @@ async function migrate(wild_dict, zoo_dict) {
     if (zoo_dict["ZG"] > 0) {
         print("\n" + "Green in zoo: " + str(zoo_dict["ZG"]))
         nG = int(await input("Migrate how many green? "))
-        while ((nZG - nG) <= 0)
+        while ((nZG - nG) < 0)
             nG = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZG) + ": "))
         wild_dict["green"] += nG
         zoo_dict["ZG"] = zoo_dict["ZG"] - nG
@@ -264,7 +264,7 @@ async function migrate(wild_dict, zoo_dict) {
     if (zoo_dict["ZB"] > 0) {
         print("\n" + "Blue in zoo: " + str(zoo_dict["ZB"]))
         nB = int(await input("Migrate how many blue? "))
-        while ((nZB - nB) <= 0)
+        while ((nZB - nB) < 0)
             nB = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZB) + ": "))
         wild_dict["blue"] += nB
         zoo_dict["ZB"] = zoo_dict["ZB"] - nB
@@ -272,7 +272,7 @@ async function migrate(wild_dict, zoo_dict) {
     if (zoo_dict["ZP"] > 0) {
         print("\n" + "Purple in zoo: " + str(zoo_dict["ZP"]))
         nP = int(await input("Migrate how many purple? "))
-        while ((nZP - nP) <= 0)
+        while ((nZP - nP) < 0)
             nP = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZP) + ": "))
         wild_dict["purple"] += nP
         zoo_dict["ZP"] = zoo_dict["ZP"] - nP
@@ -289,37 +289,37 @@ current_env = random.choice(env)
 print("Current environment is: " + str(current_env) + "\n" )
 print("Each zoo has 5 birds. You can take birds from the zoo and introduce them into the wild." + "\n")
 nR = int(await input("How many red birds would you like to add from the zoo? " + "\n"))
-while ((nZR - nR) <= 0)
+while ((nZR - nR) < 0)
     nR = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZR) + ": "))
 wild_dict["red"] = nR
 zoo_dict["ZR"] = nZR - nR
     
 nO = int(await input("How many orange birds would you like to add from the zoo? " + "\n"))
-while ((nZO - nO) <= 0)
+while ((nZO - nO) < 0)
     nO = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
 wild_dict["orange"] = nO
 zoo_dict["ZO"] = nZO - nO
 
 nY = int(await input("How many yellow birds would you like to add from the zoo? " + "\n"))
-while ((nZY - nY) <= 0)
+while ((nZY - nY) < 0)
     nY = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZY) + ": "))
 wild_dict["yellow"] = nY
 zoo_dict["ZY"] = nZY - nY
     
 nG = int(await input("How many green birds would you like to add from the zoo? " + "\n"))
-while ((nZG - nG) <= 0)
+while ((nZG - nG) < 0)
     nG = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZG) + ": "))
 wild_dict["green"] = nG
 zoo_dict["ZG"] = nZG - nG
 
 nB = int(await input("How many blue birds would you like to add from the zoo? " + "\n"))
-while ((nZB - nB) <= 0)
+while ((nZB - nB) < 0)
     nB = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZB) + ": "))
 wild_dict["blue"] = nB
 zoo_dict["ZB"] = nZB - nB
 
 nP = int(await input("How many purple birds would you like to add from the zoo? " + "\n"))
-while ((nZP - nP) <= 0)
+while ((nZP - nP) < 0)
     nP = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZP) + ": "))
 wild_dict["purple"] = nP
 zoo_dict["ZP"] = nZP - nP
