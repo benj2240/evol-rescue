@@ -241,7 +241,7 @@ async function migrate(wild_dict, zoo_dict) {
         print("\n" + "Orange in zoo: " + str(zoo_dict["ZO"]))
         nO = int(await input("Migrate how many orange? "))
         while ((nZO - nO) <= 0)
-            nR = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
+            nO = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
         wild_dict["orange"] += nO
         zoo_dict["ZO"] = zoo_dict["ZO"] - nO
     }
@@ -296,7 +296,7 @@ zoo_dict["ZR"] = nZR - nR
     
 nO = int(await input("How many orange birds would you like to add from the zoo? " + "\n"))
 while ((nZO - nO) <= 0)
-    nR = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
+    nO = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
 wild_dict["orange"] = nO
 zoo_dict["ZO"] = nZO - nO
 
