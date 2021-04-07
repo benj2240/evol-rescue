@@ -73,307 +73,289 @@ const random = {
 }
 
 function sum (array) {
-    return array.reduce((a, b) => a + b, 0);
+    return array.reduce((acc, x) => acc + x, 0);
 }
 
-// environment colors
-env = ["red", "orange", "yellow", "green", "blue", "purple"]
-rounds = 6
-score = 0
+const COLORS = ["red", "orange", "yellow", "green", "blue", "purple"]
 
-// counts of wild birds
-nR = 0
-nO = 0
-nY = 0
-nG = 0
-nB = 0
-nP = 0
-total_wild = 0
-wild_dict = {}
+const STATE = {
+    environment: {
+        current: "red",
+        adjacents: ["orange", "purple"],
+        opposite: "green",
+    },
+    population: {
+        wild: {
+            red: 0,
+            orange: 0,
+            yellow: 0,
+            green: 0,
+            blue: 0,
+            purple: 0,
+        },
+        zoo: {
+            red: 5,
+            orange: 5,
+            yellow: 5,
+            green: 5,
+            blue: 5,
+            purple: 5,
+        },
+    },
+};
 
-// counts of zoo birds
-nZR = 5
-nZO = 5
-nZY = 5
-nZG = 5
-nZB = 5
-nZP = 5
-total_zoo = 30
-zoo_dict = {}
-
-opp_color = ""
-adj_color = ""
-
-function print_totals() {
-    print("Your current wild bird population:")
-    print("Red: " + str(wild_dict["red"]))
-    print("Orange: " + str(wild_dict["orange"]))
-    print("Yellow: " + str(wild_dict["yellow"]))
-    print("Green: " + str(wild_dict["green"]))
-    print("Blue: " + str(wild_dict["blue"]))
-    print("Purple: " + str(wild_dict["purple"]))
-    total_zoo = sum(Object.values(zoo_dict))
-    total_wild = sum(Object.values(wild_dict))
-    total = total_zoo + total_wild
-    print("Zoo: " + str(total_zoo))
-    print("Wild: " + str(total_wild))
-    print("Overall total: " +str(total))
+function wildPopulation () {
+    return sum(Object.values(STATE.population.wild));
 }
 
-function color_match(current_env) {
-    if (current_env == "red") {
-        opp_color = "green"
-        adj_color = ["purple", "orange"]
-    } else if (current_env == "orange") {
-        opp_color = "blue"
-        adj_color = ["red", "yellow"]
-    } else if (current_env == "yellow") {
-        opp_color = "purple"
-        adj_color = ["orange", "green"]
-    } else if (current_env == "green") {
-        opp_color = "red"
-        adj_color = ["yellow", "blue"]
-    } else if (current_env == "blue") {
-        opp_color = "orange"
-        adj_color = ["green", "purple"]
-    } else if (current_env == "purple") {
-        opp_color = "yellow"
-        adj_color = ["blue", "red"]
-    } else
-        print("fail")
+function populatedWildEnvironments () {
+    return COLORS.filter(color => STATE.population.wild[color] > 0);
 }
 
-function predation(wild_dict, opp_color) {
-    animal = ["hawk", "snake", "badger", "fox"]
-    predator = random.choice(animal)
-    print("A " + str(predator) + " attacks!")
-    if (wild_dict[opp_color]) {
-        wild_dict[opp_color] = 0
-        print("Your " + str(opp_color) + " birds were very visible in the " + str(current_env) + " habitat and were all eaten.")
+function print_totals () {
+    print("Your current wild bird population:");
+    print(`Red: ${STATE.population.wild["red"]}`);
+    print(`Orange: ${STATE.population.wild["orange"]}`);
+    print(`Yellow: ${STATE.population.wild["yellow"]}`);
+    print(`Green: ${STATE.population.wild["green"]}`);
+    print(`Blue: ${STATE.population.wild["blue"]}`);
+    print(`Purple: ${STATE.population.wild["purple"]}`);
+    const total_zoo = sum(Object.values(STATE.population.zoo));
+    const total_wild = sum(Object.values(STATE.population.wild));
+    const total = total_zoo + total_wild;
+    print(`Zoo: ${total_zoo}`);
+    print(`Wild: ${total_wild}`);
+    print(`Overall total: ${total}`);
+}
+
+function changeEnvironment () {
+    const baseIndex = Math.floor(Math.random() * COLORS.length);
+    const [adj1, current, adj2, opposite] = [-1, 0, 1, 3]
+        .map(offset => (baseIndex + offset + COLORS.length) % COLORS.length)
+        .map(index => COLORS[index]);
+
+    STATE.environment = {
+        current,
+        adjacents: [adj1, adj2],
+        opposite,
+    };
+}
+
+function predation() {
+    const predator = random.choice(["hawk", "snake", "badger", "fox"]);
+    print(`A ${predator} attacks!`);
+    const { current, opposite } = STATE.environment;
+    if (STATE.population.wild[opposite] > 0) {
+        STATE.population.wild[opposite] = 0;
+        print(`Your ${opposite} birds were very visible in the ${current} habitat and were all eaten.`);
     }
-    return(wild_dict)    
+    else {
+        print(`All of your wild birds managed to hide from the ${predator} in the ${current} habitat.`);
+    }
 }
 
-function reproduce(current_env, wild_dict, adj_color) {
-    if (wild_dict[current_env]) {
-        wild_dict[current_env] += 3
-        print("You get +3 for your " + str(current_env) + " birds because they camouflage perfectly.")
+function reproduction() {
+    const { current, adjacents } = STATE.environment;
+    if (STATE.population.wild[current] > 0) {
+        STATE.population.wild[current] += 3;
+        print(`You get +3 for your ${current} birds because they camouflage perfectly.`);
     }
-    for (let i of adj_color) {
-        if (wild_dict[i]) {
-            wild_dict[i] += 1
-            print("You get +1 for your " + str(adj_color) + " birds because they blend in pretty well.")
+    for (let adjacent of adjacents) {
+        if (STATE.population.wild[adjacent]) {
+            STATE.population.wild[adjacent] += 1;
+            print(`You get +1 for your ${adjacent} birds because they blend in pretty well.`);
         }
     }
-    return wild_dict
 }
         
-function mutation(wild_dict) {
-    loser_choice = []
-    winner_choice = ["red", "orange", "yellow", "green", "blue", "purple"]
-    for (let [key, value] of Object.entries(wild_dict)) {
-        if (value != 0)
-            loser_choice.push(key)
+function mutation() {
+    if (wildPopulation() === 0) {
+        // If there are no birds in the wild, we won't mutate
+        return;
     }
-    loser = random.choice(loser_choice)
-    wild_dict[loser] -= 1
-    winner = random.choice(winner_choice)
-    wild_dict[winner] += 1
-    print("One " + str(loser) + " bird mutated into a " + str(winner) + " bird.")
-    return wild_dict
+
+    const oldColor = random.choice(populatedWildEnvironments());
+    const newColor = random.choice(COLORS.filter(color => color !== oldColor));
+
+    STATE.population.wild[oldColor] -= 1;
+    STATE.population.wild[newColor] += 1;
+    print(`One ${oldColor} bird mutated into a ${newColor} bird.`);
 }
 
-function drift(wild_dict) {
-    t = 0
-    option = ["A", "A", "B", "B", "C", "C", "D", "E"]
-    loss = random.choice(option)
-    if (loss == "A") {
-        text = ["A poacher attacks! Lose 1 bird.", "Your birds get the flu. Lose 1 bird."]
-        A = random.choice(text)
-        print(str(A))
-        loser_choice = []
-        for (let [key, value] of Object.entries(wild_dict))
-            if (value != 0)
-                loser_choice.push(key)
-        loser = random.choice(loser_choice)
-        wild_dict[loser] -= 1
-        print("You lost one " + str(loser) + " bird.")
-    }
-    else if (loss == "B") {
-        text = ["A harsh winter takes its toll. Lose 2 birds.", "A drought limits food supply. Lose 2 birds."]
-        B = random.choice(text)
-        print(str(B))
-        while (t < 2) {
-            loser_choice = []
-            for (let [key, value] of Object.entries(wild_dict))
-                if (value != 0)
-                    loser_choice.push(key)
-            loser = random.choice(loser_choice)
-            wild_dict[loser] -= 1
-            print("You lost one " + str(loser) + " bird.")
-            t += 1
+function weightedChoice (options) {
+    let sumOfWeights = 0;
+    const cumulativeWeights = Object.entries(options)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([option, weight]) => {
+            sumOfWeights += weight;
+            return [option, sumOfWeights];
+        });
+
+    const rand = Math.random() * sumOfWeights;
+    for (let [option, cumulativeWeight] of cumulativeWeights) {
+        if (rand < cumulativeWeight) {
+            return option;
         }
     }
-    else if (loss == "C") {
-        total = Math.round((sum(Object.values(wild_dict))/2))
-        print("A fire destroys nesting locations. Half your birds die.")
-        while (t < total) {
-            loser_choice = []
-            for (let [key, value] of Object.entries(wild_dict))
-                if (value != 0)
-                    loser_choice.push(key)
-            loser = random.choice(loser_choice)
-            wild_dict[loser] -= 1
-            print(str(loser) + " lost one bird.")
-            t += 1
+
+    // This should never happen, unless there's a bug in the above
+    // Still, let's make sure we fail semi-gracefully
+    console.error("Failed to choose random option! Returning last instead.");
+    return cumulativeWeights[cumulativeWeights.length - 1][0];
+}
+
+function loseBirds (count) {
+    let lostCount = 0;
+    let losses = {};
+    while (lostCount < count && wildPopulation() > 0) {
+        const color = random.choice(populatedWildEnvironments());
+        STATE.population.wild[color] -= 1;
+        lostCount += 1;
+        losses[color] = (losses[color] || 0) + 1;
+    }
+    return losses;
+}
+
+function driftResults (driftType) {
+    switch (driftType) {
+        case "LOSE_ONE":
+            return {
+                message: random.choice([
+                    "A poacher attacks! Lose 1 bird.",
+                    "Your birds get the flu. Lose 1 bird.",
+                ]),
+                losses: loseBirds(1),
+            };
+
+        case "LOSE_TWO":
+            return {
+                message: random.choice([
+                    "A harsh winter takes its toll. Lose 2 birds.",
+                    "A drought limits food supply. Lose 2 birds.",
+                ]),
+                losses: loseBirds(2),
+            };
+
+        case "LOSE_HALF":
+            return {
+                message: "A fire destroys nesting locations. Half your birds die.",
+                losses: loseBirds(Math.floor(wildPopulation() / 2)),
+            };
+
+        case "NO_LOSS":
+            return {
+                message: "All your birds are safe!",
+                losses: loseBirds(0),
+            };
+    }
+
+    // Hard to be graceful about this one.
+    throw `Unrecognized drift type '${driftType}'!`;
+}
+
+function drift () {
+    // Choose a type of loss
+    const driftType = weightedChoice({
+        LOSE_ONE: 1,
+        LOSE_TWO: 1,
+        LOSE_HALF: 0.5,
+        NO_LOSS: 1,
+    });
+
+    // Apply whatever losses are appropriate
+    const { message, losses } = driftResults(driftType);
+
+    // Report the results
+    print(message);
+    for (let [color, count] of Object.entries(losses)) {
+        const birdx = count === 1 ? "bird" : "birds";
+        print(`You lost ${count} ${color} ${birdx}.`);
+    }
+}
+
+async function migrate () {
+    for (let color of COLORS) {
+        let zooCount = STATE.population.zoo[color];
+        let wildCount = STATE.population.wild[color];
+        let numberToMove = parseInt(await input(`How many ${color} birds should be released from the zoo? There are ${zooCount} in the zoo and ${wildCount} in the wild.`));
+        while (isNaN(numberToMove) || numberToMove < 0 || numberToMove > zooCount) {
+            if (isNaN(numberToMove)) {
+                numberToMove = int(await input("Please enter a number."));
+            }
+            else if (numberToMove < 0) {
+                numberToMove = int(await input("Please enter a positive number."));
+            }
+            else if (numberToMove > zooCount) {
+                numberToMove = int(await input(`Please enter a number less than or equal to ${zooCount}.`));
+            }
         }
+        STATE.population.zoo[color] -= numberToMove;
+        STATE.population.wild[color] += numberToMove;
     }
-    else
-        print("All your birds are safe!")    
-    total_wild = sum(Object.values(wild_dict))
-    print ("You still have " + str(total_wild) + " wild birds")    
-    return wild_dict
 }
-
-async function migrate(wild_dict, zoo_dict) {
-    if (zoo_dict["ZR"] > 0) {
-        print("Red in zoo: " + str(zoo_dict["ZR"]))
-        nR = int(await input("Migrate how many red? "))
-        while ((nZR - nR) < 0)
-            nR = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZR) + ": "))
-        wild_dict["red"] += nR
-        zoo_dict["ZR"] = zoo_dict["ZR"] - nR
-    }
-    if (zoo_dict["ZO"] > 0) {
-        print("Orange in zoo: " + str(zoo_dict["ZO"]))
-        nO = int(await input("Migrate how many orange? "))
-        while ((nZO - nO) < 0)
-            nO = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
-        wild_dict["orange"] += nO
-        zoo_dict["ZO"] = zoo_dict["ZO"] - nO
-    }
-    if (zoo_dict["ZY"] > 0) {
-        print("Yellow in zoo: " + str(zoo_dict["ZY"]))
-        nY = int(await input("Migrate how many yellow? "))
-        while ((nZY - nY) < 0)
-            nY = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZY) + ": "))
-        wild_dict["yellow"] += nY
-        zoo_dict["ZY"] = zoo_dict["ZY"] - nY
-    }
-    if (zoo_dict["ZG"] > 0) {
-        print("Green in zoo: " + str(zoo_dict["ZG"]))
-        nG = int(await input("Migrate how many green? "))
-        while ((nZG - nG) < 0)
-            nG = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZG) + ": "))
-        wild_dict["green"] += nG
-        zoo_dict["ZG"] = zoo_dict["ZG"] - nG
-    }
-    if (zoo_dict["ZB"] > 0) {
-        print("Blue in zoo: " + str(zoo_dict["ZB"]))
-        nB = int(await input("Migrate how many blue? "))
-        while ((nZB - nB) < 0)
-            nB = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZB) + ": "))
-        wild_dict["blue"] += nB
-        zoo_dict["ZB"] = zoo_dict["ZB"] - nB
-    }
-    if (zoo_dict["ZP"] > 0) {
-        print("Purple in zoo: " + str(zoo_dict["ZP"]))
-        nP = int(await input("Migrate how many purple? "))
-        while ((nZP - nP) < 0)
-            nP = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZP) + ": "))
-        wild_dict["purple"] += nP
-        zoo_dict["ZP"] = zoo_dict["ZP"] - nP
-    }
-    return wild_dict, zoo_dict
-}
-
-// ##############################################################################
 
 async function play () {
-round_no = 1
-print("ROUND " + str(round_no))
-current_env = random.choice(env)
-print("Current environment is: " + str(current_env) )
-print("Each zoo has 5 birds. You can take birds from the zoo and introduce them into the wild.")
-nR = int(await input("How many red birds would you like to add from the zoo? "))
-while ((nZR - nR) < 0)
-    nR = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZR) + ": "))
-wild_dict["red"] = nR
-zoo_dict["ZR"] = nZR - nR
-    
-nO = int(await input("How many orange birds would you like to add from the zoo? "))
-while ((nZO - nO) < 0)
-    nO = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZO) + ": "))
-wild_dict["orange"] = nO
-zoo_dict["ZO"] = nZO - nO
+    print("This is a game about birds.");
+    print("You start with a zoo full of birds, and you want to increase their numbers.");
+    print("When you release birds, they are free to thrive...");
+    print("But the wild is a dangerous place!");
 
-nY = int(await input("How many yellow birds would you like to add from the zoo? "))
-while ((nZY - nY) < 0)
-    nY = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZY) + ": "))
-wild_dict["yellow"] = nY
-zoo_dict["ZY"] = nZY - nY
-    
-nG = int(await input("How many green birds would you like to add from the zoo? "))
-while ((nZG - nG) < 0)
-    nG = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZG) + ": "))
-wild_dict["green"] = nG
-zoo_dict["ZG"] = nZG - nG
-
-nB = int(await input("How many blue birds would you like to add from the zoo? "))
-while ((nZB - nB) < 0)
-    nB = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZB) + ": "))
-wild_dict["blue"] = nB
-zoo_dict["ZB"] = nZB - nB
-
-nP = int(await input("How many purple birds would you like to add from the zoo? "))
-while ((nZP - nP) < 0)
-    nP = int(await input("Invalid. Not enough birds in zoo. Please enter a number equal or less than " + str(nZP) + ": "))
-wild_dict["purple"] = nP
-zoo_dict["ZP"] = nZP - nP
-
-while (round_no < rounds) {
-    print("---")
-    color_match(current_env)
-    await input("Press enter to encounter predators.")
-    predation(wild_dict, opp_color)
-    print("---")
-    await input("Press enter to reproduce.")
-    reproduce(current_env, wild_dict, adj_color)
-    print_totals()
-    print("---")
-    await input("Press enter to mutate.")
-    mutation(wild_dict)
-    print_totals()
-    print("---")
-    await input("Press enter to see the effects of drift (chance).")
-    drift(wild_dict)
-    print_totals()
-    print("---")
-    if (round_no < (rounds - 1)) {
-        await input("Press enter to migrate.")
-        choice_migrate = await input("Do you want to add more birds from the zoo? ")
-        if ((choice_migrate == "y" || choice_migrate == "yes")) {
-            await migrate(wild_dict, zoo_dict)
-            print_totals()
-            print("---" + "END OF ROUND " + str(round_no))            
+    const maxYears = 5;
+    let year = 1;
+    while (year <= maxYears) {
+        print(`--- YEAR ${year}`);
+        if (year === 1) {
+            changeEnvironment();
+            print(`The current environment is: ${STATE.environment.current}`);
+            await migrate();
         }
         else {
-            print_totals()
-            print("---" + "END OF ROUND " + str(round_no))
+            let choice_migrate = await input("Do you want to release more birds into the wild? ([y]es or [n]o)")
+            choice_migrate = choice_migrate.toLowerCase();
+            while (!["y", "yes", "n", "no"].includes(choice_migrate)) {
+                choice_migrate = await input("Please enter 'y' for yes or 'n' for no");
+                choice_migrate = choice_migrate.toLowerCase();
+            }
+
+            if ((choice_migrate == "y" || choice_migrate == "yes")) {
+                await migrate();
+            }
+            print_totals();
+
+            changeEnvironment();
+            print(`The current environment is: ${STATE.environment.current}`);
         }
-        await input("Press enter for next round.")            
-        print("---" + "ROUND" + str(round_no + 1))
-        current_env = random.choice(env)
-        print("Current environment is: " + str(current_env))
-        round_no += 1
+        print("---");
+        await input("Press enter to encounter predators.");
+        predation();
+        print("---");
+        await input("Press enter to reproduce.");
+        reproduction();
+        print_totals();
+        print("---")
+        await input("Press enter to mutate.");
+        mutation();
+        print_totals();
+        print("---");
+        await input("Press enter to see the effects of drift (chance).");
+        drift();
+        print_totals();
+        print(`--- END OF YEAR ${year}`);
+
+        year += 1;
+        if (year <= maxYears) {
+            await input("Press enter to begin the next year.");
+        }
     }
-    else
-        round_no += 1
-}
-print("The End!")  
-print_totals()
-score = (sum(Object.values(wild_dict)) + sum(Object.values(zoo_dict))) - 30
-print("You were able to increase your bird population by " + str(score) + " birds.")
+    print("The End!");
+    print_totals();
+    let score = sum(Object.values(STATE.population.wild)) + sum(Object.values(STATE.population.zoo)) - 30;
+    if (score > 0) {
+        print(`You were able to increase your bird population by ${score} birds.`);
+    }
+    else {
+        print(`In all, you lost ${score * -1} birds.`);
+    }
 }
 
 play();
