@@ -57,19 +57,11 @@ function input (prompt) {
     });
 }
 
-function int (value) {
-    return parseInt(value) || 0;
-}
-
-function str (value) {
-    return value.toString();
-}
-
-const random = {
-    choice: function (array) {
-        const index = Math.floor(Math.random() * array.length);
-        return array[index];
-    }
+/** Choose an element uniformly at random from the given array
+ */
+function sample (array) {
+    const index = Math.floor(Math.random() * array.length);
+    return array[index];
 }
 
 function sum (array) {
@@ -142,7 +134,7 @@ function changeEnvironment () {
 }
 
 function predation() {
-    const predator = random.choice(["hawk", "snake", "badger", "fox"]);
+    const predator = sample(["hawk", "snake", "badger", "fox"]);
     print(`A ${predator} attacks!`);
     const { current, opposite } = STATE.environment;
     if (STATE.population.wild[opposite] > 0) {
@@ -174,8 +166,8 @@ function mutation() {
         return;
     }
 
-    const oldColor = random.choice(populatedWildEnvironments());
-    const newColor = random.choice(COLORS.filter(color => color !== oldColor));
+    const oldColor = sample(populatedWildEnvironments());
+    const newColor = sample(COLORS.filter(color => color !== oldColor));
 
     STATE.population.wild[oldColor] -= 1;
     STATE.population.wild[newColor] += 1;
@@ -208,7 +200,7 @@ function loseBirds (count) {
     let lostCount = 0;
     let losses = {};
     while (lostCount < count && wildPopulation() > 0) {
-        const color = random.choice(populatedWildEnvironments());
+        const color = sample(populatedWildEnvironments());
         STATE.population.wild[color] -= 1;
         lostCount += 1;
         losses[color] = (losses[color] || 0) + 1;
@@ -220,7 +212,7 @@ function driftResults (driftType) {
     switch (driftType) {
         case "LOSE_ONE":
             return {
-                message: random.choice([
+                message: sample([
                     "A poacher attacks! Lose 1 bird.",
                     "Your birds get the flu. Lose 1 bird.",
                 ]),
@@ -229,7 +221,7 @@ function driftResults (driftType) {
 
         case "LOSE_TWO":
             return {
-                message: random.choice([
+                message: sample([
                     "A harsh winter takes its toll. Lose 2 birds.",
                     "A drought limits food supply. Lose 2 birds.",
                 ]),
@@ -280,13 +272,13 @@ async function migrate () {
         let numberToMove = parseInt(await input(`How many ${color} birds should be released from the zoo? There are ${zooCount} in the zoo and ${wildCount} in the wild.`));
         while (isNaN(numberToMove) || numberToMove < 0 || numberToMove > zooCount) {
             if (isNaN(numberToMove)) {
-                numberToMove = int(await input("Please enter a number."));
+                numberToMove = parseInt(await input("Please enter a number."));
             }
             else if (numberToMove < 0) {
-                numberToMove = int(await input("Please enter a positive number."));
+                numberToMove = parseInt(await input("Please enter a positive number."));
             }
             else if (numberToMove > zooCount) {
-                numberToMove = int(await input(`Please enter a number less than or equal to ${zooCount}.`));
+                numberToMove = parseInt(await input(`Please enter a number less than or equal to ${zooCount}.`));
             }
         }
         STATE.population.zoo[color] -= numberToMove;
